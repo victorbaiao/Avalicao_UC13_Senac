@@ -27,11 +27,11 @@
 
 #### Etapa 3 - Relatório de erros
 
-Crie em seu arquivo README.md um relatório com os problemas encontrados em seus testes.
+- Crie em seu arquivo README.md um relatório com os problemas encontrados em seus testes.
 
 #### Etapa 4 - Correção de erros
 
-Implemente as correções necessárias para atender os testes.
+- Implemente as correções necessárias para atender os testes.
 
 
 #### Etapa 5 - Github Actions
