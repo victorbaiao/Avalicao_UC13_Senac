@@ -1,4 +1,5 @@
-﻿using CadastroAluno.Models;
+﻿using CadastroAluno.Data;
+using CadastroAluno.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,16 +12,16 @@ namespace CadastroAluno.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private CadastroAlunoContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(CadastroAlunoContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            return View();
+            return View(_context.Aluno);
         }
 
         public IActionResult Privacy()
