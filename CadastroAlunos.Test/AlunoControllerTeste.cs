@@ -19,48 +19,114 @@ namespace CadastroAlunoTeste
         public AlunoControllerTeste()
         {
             _repository = new Mock<IAlunoRepository>();
+            alunoValido = new Aluno()
+            {
+                Id = 1,
+                Nome = "Victor",
+                Media = 1,
+                Turma = "1"
+            };
         }
 
         [Fact]
-        public void IndexOkResult()
+        public void ReturnOkResult_da_Index()
         {
             AlunosController controller = new AlunosController(_repository.Object);
+
             var result = controller.Index();
+
             Assert.IsType<ViewResult>(result);
         }
-
         [Fact]
-        public void IndexRepository()
+        public void ChamandoAIndexRepositorio()
         {
             AlunosController controller = new AlunosController(_repository.Object);
 
             _repository.Setup(repo => repo.Create(alunoValido)).Returns(alunoValido);
+
             controller.Create(alunoValido);
+
             _repository.Verify(repo => repo.Create(alunoValido), Times.Once);
         }
-
         [Fact]
-        public void DetailsNotFound()
+        public void SemAlunoRetornaNotFound()
         {
+            AlunosController controller = new AlunosController(_repository.Object);
 
+            _repository.Setup(repo => repo.Details(1)).Returns(alunoValido);
+
+            var consulta = controller.Create();
+
+            Assert.IsType<NotFoundResult>(consulta);
+        }
+        [Fact]
+        public void RetornaUmBadRequestSeAlunoNaoExistir()
+        {
+            AlunosController controller = new AlunosController(_repository.Object);
+
+            var consulta = controller.Create();
+
+            Assert.IsType<BadRequestResult>(consulta);
+        }
+        [Fact]
+        public void ModelChamaRepositorioUmaVez()
+        {
+            AlunosController controller = new AlunosController(_repository.Object);
+
+            _repository.Setup(repo => repo.Details(1));
+
+            controller.Create();
+
+            _repository.Verify(repo => repo.Details(1), Times.Once);
+        }
+        [Fact]
+        public void ExecutaEDaCerto()
+        {
+            AlunosController controller = new AlunosController(_repository.Object);
+
+            _repository.Setup(repo => repo.Details(1)).Returns(alunoValido);
+
+            var result = controller.Create();
+
+            Assert.IsType<ViewResult>(result);
+        }
+        [Fact]
+        public void ChamaAViewResukt()
+        {
+            AlunosController controller = new AlunosController(_repository.Object);
+
+            _repository.Setup(repo => repo.Create(alunoValido)).Returns(alunoValido);
+
+            var result = controller.Create(alunoValido);
+
+            Assert.IsType<RedirectToActionResult>(result);
+        }
+        [Fact]
+        public void HttpPost()
+        {
+            AlunosController controller = new AlunosController(_repository.Object);
+
+            _repository.Setup(repo => repo.Create(alunoValido)).Returns(alunoValido);
+
+            var result = controller.Create(alunoValido);
+
+            _repository.Verify(repo => repo.Create(alunoValido), Times.Once);
+
+            Assert.IsType<RedirectToActionResult>(result);
         }
 
         [Fact]
-        public void DetailsRepository()
+        public void RevieWDeDados()
         {
+            AlunosController controller = new AlunosController(_repository.Object);
 
-        }
+            _repository.Setup(repo => repo.Create(alunoValido)).Returns(alunoValido);
 
-        [Fact]
-        public void CreateView()
-        {
+            var result = controller.Create(alunoValido);
 
-        }
+            _repository.Verify(repo => repo.Create(alunoValido), Times.Once);
 
-        [Fact]
-        public void HttpPostView()
-        {
-
+            Assert.IsType<ViewResult>(result);
         }
     }
 }
