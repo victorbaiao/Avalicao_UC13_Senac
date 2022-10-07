@@ -17,17 +17,16 @@ namespace CadastroAluno.Controllers
         {
             _context = context;
         }
-
+        
         public IActionResult Index()
         {
             return View(_context.Index());
         }
-
-        public IActionResult Details(int id)
+        public IActionResult Details(int? id)
         {
-            if (id == null)
+            if (id == null || id < 1)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             var aluno = _context.Details(id);
@@ -35,32 +34,29 @@ namespace CadastroAluno.Controllers
             {
                 return NotFound();
             }
+
             return View(aluno);
         }
-        public IActionResult Create()
+        
+        public IActionResult Create(int id)
         {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Nome,Turma,Media")] Aluno aluno)
+	IActionResult Create([Bind("Id,Nome,Turma,Media")] Aluno aluno)
         {
             if (ModelState.IsValid)
             {
+
                 _context.Create(aluno);
                 return RedirectToAction(nameof(Index));
             }
             return View(aluno);
         }
-
+        
         public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var aluno = _context.Details(id);
             if (aluno == null)
             {
@@ -68,6 +64,7 @@ namespace CadastroAluno.Controllers
             }
             return View(aluno);
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,Nome,Turma,Media")] Aluno aluno)
@@ -76,7 +73,6 @@ namespace CadastroAluno.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 _context.Edit(id, aluno);
@@ -84,14 +80,13 @@ namespace CadastroAluno.Controllers
             }
             return View(aluno);
         }
-
+       
         public IActionResult Delete(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var aluno = _context.Details(id);
             if (aluno == null)
             {
@@ -99,6 +94,7 @@ namespace CadastroAluno.Controllers
             }
             return View(aluno);
         }
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -107,7 +103,6 @@ namespace CadastroAluno.Controllers
             _context.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
         private IActionResult AlunoExists(int id)
         {
             if (id == null)
@@ -117,4 +112,9 @@ namespace CadastroAluno.Controllers
             return Ok();
         }
     }
-}
+
+        public object Create(Aluno alunoValido)
+        {
+            throw new NotImplementedException();
+        }
+    }
